@@ -61,7 +61,7 @@ const javulator = {
         return tokenizer.tokenize(expression);
     },
     _guessOperator: function (previousToken, candidates) {
-        const argCount = previousToken === null || !previousToken.isCloseBracket() && (!previousToken.isLiteral() || previousToken.isLiteralValue()) ? 1 : 2;
+        const argCount = previousToken === null || previousToken.kind!=='CLOSE_BRACKET' && (previousToken.kind!=='LITERAL' || previousToken==='LITERAL_VALUE') ? 1 : 2;
 
         let op = null, counter = 0;
         do {
@@ -103,11 +103,6 @@ const javulator = {
             }
         }
     },
-
-    _evaluateToken(token, args, context) {
-        const tmp = token.content.fn.call(this, args, context);
-        return tmp;
-    },
     _output(values, token, context) {
         if (token.kind === 'LITERAL') {
             let res = this.constants[token.content];
@@ -129,6 +124,7 @@ const javulator = {
             values.splice(0, 0, token.content);
         } else {
             if (token.kind !== 'OPERATOR') {
+                console.log('Wrong token', token, values);
                 throw new Error("Token is not valid Operator: " + token.content);
             }
             const res = this._evaluateToken(token, this._getArguments(values, token.content.operandCount), context);
@@ -142,12 +138,15 @@ const javulator = {
         console.log('values', values);
         const res = [];
         for (let i=0;i<argCount;i++){
-            res.push(values.pop());
+            res.splice(0,0,(values.splice(0,1)[0]));
         }
         console.log('res values', res);
         return res;
     },
-
+    _evaluateToken(token, args, context) {
+        const tmp = token.content.fn.call(this, args, context);
+        return tmp;
+    },
     _doFunction(values, token, argCount, argumentTokens, context) {
         const args = this._getArguments(values, argCount);
         const argsTokens = this._getArguments(argumentTokens, argCount);
@@ -178,6 +177,7 @@ const javulator = {
         const previousValuesSize = [];//this.functions.length===0? [] : null;
 
         const tokens = this.tokenize(expression);
+        console.log('tokenizer tokenized', tokens);
         let token, previousToken;
         for (let i = 0; i < tokens.length; i++) {
             let currentToken = tokens[i];
@@ -189,9 +189,9 @@ const javulator = {
                 if (previousToken && previousToken.kind === 'FUNCTION') {
                     if (!this.functionBrackets['(']) {
                         throw new Error("Invalid bracket after function: " + currentToken);
-                    } else if (!this.expressionBrackets['(']) {
-                        throw new Error("Invalid bracket after function: " + currentToken);
                     }
+                }else if (!this.expressionBrackets['(']) {
+                    throw new Error("Invalid bracket in expression: " + currentToken);
                 }
 
             } else if (token.kind === 'CLOSE_BRACKET') {
@@ -240,9 +240,9 @@ const javulator = {
                         break;
                     }
                     let tmpToken = stack.splice(0, 1)[0];
-                    argumentTokens.splice(0, 0, tmpToken);
 
                     this._output(values, tmpToken, context);
+                    argumentTokens.splice(0, 0, tmpToken);
                 }
                 if (!sc3) {
                     throw new Error("Separator or parentheses mismatched");
@@ -260,7 +260,7 @@ const javulator = {
             } else {
                 while (stack.length > 0) {
                     let sc4 = stack[0];
-                    if (sc4.kind === 'OPERATOR' || (token.content.associativity !== 'LEFT' || token.content.precedence > sc4.content.precedence) && token.content.precedence >= sc4.content.precedence) {
+                    if (sc4.kind !== 'OPERATOR' || (token.content.associativity !== 'LEFT' || token.content.precedence > sc4.content.precedence) && token.content.precedence >= sc4.content.precedence) {
                         break;
                     }
                     let tmpToken = stack.splice(0, 1)[0];

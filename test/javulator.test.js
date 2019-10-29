@@ -43,7 +43,36 @@ describe("simpleJavulator", function () {
         expect(javulator.evaluate("$a$>$b$", {a: 30, b:20})).to.eql(true);
     });
 
-    it('returns MAP from context', function () {
-        expect(javulator.evaluate("FIELD('key', 34)")).to.eql({key: 34});
+    it('returns FIELD from context', function () {
+        expect(javulator.evaluate("FIELD('key', 34+1)")).to.eql({key: 35});
     });
+
+    it('returns MAP FIELD from context', function () {
+        expect(javulator.evaluate("MAP(FIELD('key', $kk$+1), FIELD('key1', $kk$))", {kk:89})).to.eql({key: 90, key1:89});
+    });
+
+    it('returns SIZE_OF from context', function () {
+        expect(javulator.evaluate("SIZE_OF($v$)",  { v:['1','2','3']})).to.eql(3);
+    });
+
+    it('returns IS_NULL from context', function () {
+        expect(javulator.evaluate("IS_NULL($v$)",  { v:['1','2','3']})).to.eql(false);
+    });
+
+    it('returns SET_NULL from context', function () {
+        expect(javulator.evaluate("SET_NULL()")).to.eql(null);
+    });
+    it('returns THIS from context', function () {
+        expect(javulator.evaluate("THIS()",  { v:['1','2','3']})).to.eql({v:['1','2','3']});
+    });
+
+    it('returns IF from context', function () {
+        expect(javulator.evaluate("IF(2>3,4,5)")).to.eql(5);
+    });
+
+    it('returns TO_BOOLEAN from context', function () {
+        expect(javulator.evaluate("TO_BOOLEAN(5)")).to.eql(true);
+    });
+
+
 });

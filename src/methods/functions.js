@@ -110,10 +110,11 @@ const functions = {
         minArgumentCount: 1, maxArgumentCount:1,
         fn: function(operands, argumentList, evaluationContext){
             let val = operands[0];
+            //console.log('typeof val=>'+ typeof(val));
             if (typeof(val)==='string'){
                 return JSON.parse(val);
             }else if (typeof(val)==='number'){
-                return val===0;
+                return val===0?false:true;
             }else if (typeof(val)==='boolean'){
                 return val;
             }else {
@@ -233,7 +234,10 @@ const functions = {
         minArgumentCount: 0, maxArgumentCount:Number.MAX_SAFE_INTEGER,
         fn: function(operands, argumentList, evaluationContext){
             const tmpObj = {};
+            console.log('MAP operands', operands, argumentList, evaluationContext);
             operands.forEach(function(item){
+                console.log('typeof'+typeof(item));
+
                 if (typeof(item)==='object'){
                     for(let prop in item){
                         tmpObj[prop] = item[prop];
