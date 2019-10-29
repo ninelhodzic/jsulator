@@ -1,3 +1,4 @@
+import pathExtractor from './pathExtractor'
 const mapResolver = {
   resolveToMap(expression) {
     return JSON.parse(expression);
@@ -10,7 +11,7 @@ const mapResolver = {
     if (expression.startsWith('$') && expression.endsWith('$')) {
       tmp = expression.substring(1, expression.length - 1);
     }
-    return context[tmp];
+    return pathExtractor.resolve(tmp, context);
   }
 }
 

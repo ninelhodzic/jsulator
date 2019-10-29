@@ -252,13 +252,6 @@ const functions = {
         fn: function(operands, argumentList, evaluationContext){
             console.log('called field', operands, argumentList, evaluationContext);
             const tmpObj = {};
-            /*operands.forEach(function(item){
-                if (typeof(item)==='object'){
-                    for(let prop in item){
-                        tmpObj[prop] = item[prop];
-                    }
-                }
-            });*/
             tmpObj[operands[0]]=operands[1];
             console.log('res field', tmpObj);
             return tmpObj;
@@ -299,6 +292,7 @@ const functions = {
         minArgumentCount: 1, maxArgumentCount:Number.MAX_SAFE_INTEGER,
         fn: function(operands, argumentList, evaluationContext){
             const target = {};
+            console.log('Extend', operands, argumentList, evaluationContext);
             operands.forEach(function(item){
                 for (const prop in item){
                     target[prop] = item[prop];
