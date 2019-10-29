@@ -234,7 +234,7 @@ const functions = {
         minArgumentCount: 0, maxArgumentCount:Number.MAX_SAFE_INTEGER,
         fn: function(operands, argumentList, evaluationContext){
             const tmpObj = {};
-            console.log('MAP operands', operands, argumentList, evaluationContext);
+          //  console.log('MAP operands', operands, argumentList, evaluationContext);
             operands.forEach(function(item){
                 console.log('typeof'+typeof(item));
 
@@ -250,17 +250,17 @@ const functions = {
     FIELD:{
         minArgumentCount: 2, maxArgumentCount:3,
         fn: function(operands, argumentList, evaluationContext){
-            console.log('called field', operands, argumentList, evaluationContext);
+       //     console.log('called field', operands, argumentList, evaluationContext);
             const tmpObj = {};
             tmpObj[operands[0]]=operands[1];
-            console.log('res field', tmpObj);
+         //   console.log('res field', tmpObj);
             return tmpObj;
         }
     },
     REMOVE:{
         minArgumentCount: 1, maxArgumentCount:1,
         fn: function(operands, argumentList, evaluationContext){
-            console.log('REMOVE fn=> ', operands, argumentList, evaluationContext);
+         //   console.log('REMOVE fn=> ', operands, argumentList, evaluationContext);
             let res = mapResolve.remove(operands[0], evaluationContext);
             return res;
         }
@@ -286,7 +286,7 @@ const functions = {
         minArgumentCount: 1, maxArgumentCount:Number.MAX_SAFE_INTEGER,
         fn: function(operands, argumentList, evaluationContext){
             const target = {};
-            console.log('Extend', operands, argumentList, evaluationContext);
+       //     console.log('Extend', operands, argumentList, evaluationContext);
             operands.forEach(function(item){
                 for (const prop in item){
                     target[prop] = item[prop];
@@ -344,7 +344,7 @@ const functions = {
         minArgumentCount: 3, maxArgumentCount:3,
         fn: function(operands, argumentList, evaluationContext){
             //operands[0][operands[1]]=operands[2];
-            console.log('PUT operands =>', operands, argumentList, evaluationContext);
+            //console.log('PUT operands =>', operands, argumentList, evaluationContext);
             const res = mapResolve.put(operands[0], operands[1], operands[2]);
             return res;
         }
