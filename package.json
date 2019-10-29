@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.0",
-    "xregexp": "^4.2.4"
+    "xregexp": "^4.2.4",
+    "dot-object": "^1.9.0"
   }
 }

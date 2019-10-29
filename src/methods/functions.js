@@ -1,4 +1,4 @@
-
+import mapResolve from '../mapResolver'
 const functions = {
     IS_NULL:{
         minArgumentCount: 1, maxArgumentCount:1,
@@ -258,17 +258,11 @@ const functions = {
         }
     },
     REMOVE:{
-        minArgumentCount: 2, maxArgumentCount:2,
+        minArgumentCount: 1, maxArgumentCount:1,
         fn: function(operands, argumentList, evaluationContext){
-            if (Array.isArray(operands[0])){
-                const index = operands[0].indexOf(operands[1]);
-                if (index>-1)
-                    operands[0].splice(index);
-                return operands[0];
-            }else if (typeof(operands[0])==='object'){
-                delete operands[0][operands[1]];
-                return operands[0];
-            }
+            console.log('REMOVE fn=> ', operands, argumentList, evaluationContext);
+            let res = mapResolve.remove(operands[0], evaluationContext);
+            return res;
         }
     },
     THIS:{
@@ -349,7 +343,10 @@ const functions = {
     PUT:{
         minArgumentCount: 3, maxArgumentCount:3,
         fn: function(operands, argumentList, evaluationContext){
-            operands[0][operands[1]]=operands[2];
+            //operands[0][operands[1]]=operands[2];
+            console.log('PUT operands =>', operands, argumentList, evaluationContext);
+            const res = mapResolve.put(operands[0], operands[1], operands[2]);
+            return res;
         }
     },
     LIMIT:{

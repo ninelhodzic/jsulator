@@ -53,7 +53,7 @@ const tokenizer = {
                 if (pos !== match.index){// that.regeXp.lastIndex) {
                     //let res = str.substring(pos, str.length === that.regeXp.lastIndex ? that.regeXp.lastIndex : that.regeXp.lastIndex - 1);
                     let res = str.substring(pos, match.index);
-                    if (res)
+                    if (res && res.trim())
                         result.push(res.trim());
                 }
 

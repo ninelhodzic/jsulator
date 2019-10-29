@@ -74,9 +74,20 @@ describe("simpleJsulator", function () {
         expect(jsulator.evaluate("TO_BOOLEAN(5)")).to.eql(true);
     });
 
-    it('returns EXTEND from context', function () {
+    it('returns complex EXTEND from context', function () {
         expect(jsulator.evaluate("FIELD('obj', EXTEND($obj$, FIELD('key', 1), FIELD('key2', 2)))", { obj:{name:'obj', arr:[1,2,3]}})).to.eql({ obj:{key:1, key2: 2, name:'obj', arr:[1,2,3]}});
     });
 
+    it('returns complex THIS and FIELD from context', function () {
+        expect(jsulator.evaluate("FIELD('th', THIS())", {obj:{name: 'name1', age: 23}})).to.eql({th:{obj:{name:'name1',age:23}}});
+    });
+
+    it('returns REMOVE property from context', function () {
+        expect(jsulator.evaluate("REMOVE('obj.name')", {obj:{name: 'name1', age: 23}})).to.eql({obj:{age:23}});
+    });
+
+    it('returns PUT property to context', function () {
+        expect(jsulator.evaluate("FIELD('obj', PUT($obj$,'name','nesto'))", {obj:{name: 'name1', age: 23}})).to.eql({obj:{age:23,name:'nesto'}});
+    });
 
 });
