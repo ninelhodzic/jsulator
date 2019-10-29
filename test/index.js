@@ -1,1 +1,1 @@
-require('./javulator.test');
+require('./jsulator.test');

@@ -1,8 +1,8 @@
-import simpleJavulator from './simpleJavulator'
+import simpleJsulator from './simpleJsulator'
 import tokenizer from './tokenizer'
 import mapResolver from './mapResolver'
 
 export {
-    simpleJavulator as default,
+    simpleJsulator as default,
     tokenizer,mapResolver
 }
