@@ -22,8 +22,10 @@ const tokenizer = {
                 } else {
                     tmpDelim = delim;
                 }
-                that.pattern += tmpDelim;
-                that.pattern += "|";
+                if (tmpDelim && tmpDelim.trim()) {
+                  that.pattern += tmpDelim.trim();
+                  that.pattern += "|";
+                }
             });
             this.pattern = this.pattern.substring(0, this.pattern.length - 1);
         }
@@ -58,13 +60,13 @@ const tokenizer = {
                 }
 
                 let m = match[0];
-                if (m)
+                if (m && m.trim())
                     result.push(m.trim());
                 pos = match.index + match[0].length;
             }
             if (pos !== str.length) {
                 let s = str.substring(pos);
-                if (s)
+                if (s && s.trim())
                     result.push(s.trim());
             }
             return result;
