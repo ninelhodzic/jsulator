@@ -1,4 +1,5 @@
 import DotObject from 'dot-object'
+import pathExtractor from './pathExtractor'
 
 const mapResolver = {
     resolveToMap(expression) {
@@ -12,7 +13,8 @@ const mapResolver = {
         if (expression.startsWith('$') && expression.endsWith('$')) {
             tmp = expression.substring(1, expression.length - 1);
         }
-        const res = DotObject.pick(tmp, context);
+        const res = pathExtractor.resolve(tmp, context); //DotObject.pick(tmp, context);
+        console.log('Pick', res, tmp, expression);
         return res;
     },
     remove(expression, context) {

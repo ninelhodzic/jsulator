@@ -203,7 +203,7 @@ const functions = {
     INDEX_OF:{
         minArgumentCount: 2, maxArgumentCount:2,
         fn: function(operands, argumentList, evaluationContext){
-            const target = operands[0];const indexOf = operands[1];
+            const target = operands[0]; const indexOf = operands[1];
             return target.indexOf(indexOf);
         }
     },
@@ -337,7 +337,15 @@ const functions = {
     ADD:{
         minArgumentCount: 2, maxArgumentCount:2,
         fn: function(operands, argumentList, evaluationContext){
-            return operands[0].push(operands[1]);
+            operands[0].push(operands[1]);
+            return operands[0];
+        }
+    },
+    INSERT:{
+        minArgumentCount: 3, maxArgumentCount:3,
+        fn: function(operands, argumentList, evaluationContext){
+             operands[0].splice(operands[1], 1, operands[2]);
+             return operands[0];
         }
     },
     PUT:{

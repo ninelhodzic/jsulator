@@ -35,6 +35,11 @@ describe("simpleJsulator", function () {
         expect(jsulator.evaluate("$message$+' World'", {message:'Hello'})).to.eql('Hello World');
     });
 
+    it('returns simple object array from context', function () {
+        expect(jsulator.evaluate("$a[].name$", {a: [{name:'name1'},{name:'name2'}]})).to.eql(['name1','name2']);
+    });
+
+
     it('returns sum from context', function () {
         expect(jsulator.evaluate("$a$+$b$", {a: 10, b:20})).to.eql(30);
     });
@@ -88,6 +93,12 @@ describe("simpleJsulator", function () {
 
     it('returns PUT property to context', function () {
         expect(jsulator.evaluate("FIELD('obj', PUT($obj$,'name','nesto'))", {obj:{name: 'name1', age: 23}})).to.eql({obj:{age:23,name:'nesto'}});
+    });
+
+    it('INSERT to List at position', function(){
+        expect(jsulator.evaluate("FIELD('arr', INSERT($arr$, INDEX_OF($arr[].user$, 'user1'), FIELD('user','user1_11')))",
+            {arr:[{user:'user2'},{user:'user1'},{user:'user3'}]}))
+            .to.eql({arr:[{user:'user2'},{user:'user1_11'},{user:'user3'}]});
     });
 
 });
