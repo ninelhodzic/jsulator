@@ -24,7 +24,7 @@ const jsulator = {
 
     const tokenDelimitersBuilder = ['(', ')'];
     const that = this;
-    console.log('parameters', parameters);
+   // console.log('parameters', parameters);
 
     parameters.forEach(function (param) {
       const symbol = param.symbol;
@@ -135,12 +135,12 @@ const jsulator = {
     if (values.length < argCount) {
       throw new Error("There is values size: " + values.size() + " less then required: " + argCount);
     }
-    console.log('values', values);
+    //console.log('values', values);
     const res = [];
     for (let i = 0; i < argCount; i++) {
       res.splice(0, 0, (values.splice(0, 1)[0]));
     }
-    console.log('res values', res);
+    //console.log('res values', res);
     return res;
   },
   _evaluateToken(token, args, context) {
@@ -152,7 +152,7 @@ const jsulator = {
     const argsTokens = this._getArguments(argumentTokens, argCount);
 
     const res = token.content.fn.call(this, args, argsTokens, context);
-    console.log('function result', res);
+  //  console.log('function result', res);
     values.splice(0, 0, res);
     // return tmp;
   },
@@ -177,13 +177,13 @@ const jsulator = {
     const previousValuesSize = [];//this.functions.length===0? [] : null;
 
     const tokens = this.tokenize(expression);
-    console.log('tokenizer tokenized', tokens);
+  //  console.log('tokenizer tokenized', tokens);
     let token, previousToken;
     for (let i = 0; i < tokens.length; i++) {
       let currentToken = tokens[i];
       previousToken = token;
       token = this._toToken(previousToken, currentToken);
-      console.log('Created new token', token);
+   //   console.log('Created new token', token);
       if (token.kind === 'OPEN_BRACKET') {
         stack.splice(0, 0, token);
         if (previousToken && previousToken.kind === 'FUNCTION') {
@@ -276,7 +276,7 @@ const jsulator = {
     while (stack.length > 0) {
       console.log('stack in while', stack);
       let tmpToken = stack.splice(0, 1)[0];
-      console.log('sliced token', tmpToken);
+   //   console.log('sliced token', tmpToken);
       if (tmpToken.kind === 'OPEN_BRACKET' || tmpToken.kind === 'CLOSE_BRACKET') {
         throw new Error("Parentheses mismatched");
       }
@@ -284,7 +284,7 @@ const jsulator = {
       this._output(values, tmpToken, context);
     }
     if (values.length != 1) {
-      console.log('values and size', values);
+   //   console.log('values and size', values);
       throw new Error("Values size is not 1");
     } else {
       return values.splice(0, 1)[0];

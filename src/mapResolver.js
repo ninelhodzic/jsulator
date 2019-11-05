@@ -14,7 +14,7 @@ const mapResolver = {
             tmp = expression.substring(1, expression.length - 1);
         }
         const res = pathExtractor.resolve(tmp, context); //DotObject.pick(tmp, context);
-        console.log('Pick', res, tmp, expression);
+        //console.log('Pick', res, tmp, expression);
         return res;
     },
     remove(expression, context) {
