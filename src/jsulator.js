@@ -104,13 +104,14 @@ const jsulator = {
     }
   },
   _output(values, token, context) {
-    if (token.kind === 'LITERAL') {
+    /*if (token.kind === 'LITERAL') {
       let res = this.constants[token.content];
       if (!res) {
         res = token.content;
       }
       values.splice(0, 0, res);
-    } else if (token.kind === 'LOOKUP_LITERAL') {
+    } else */
+    if (token.kind === 'LOOKUP_LITERAL' || token.kind==='LITERAL') {
       let res = this.constants[token.content];
       if (!res) {
         res = token.content;
