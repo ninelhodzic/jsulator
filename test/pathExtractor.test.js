@@ -7,6 +7,22 @@ describe("pathExtractor", function() {
         expect(pathExtractor.resolve('name', {name:'Hello'})).to.eql('Hello');
     });
 
+    it('it resolve nothing on nothing', function () {
+        expect(pathExtractor.resolve('', {user:{name:'Hello'}})).to.eql('');
+    });
+
+    it('it resolve undefined on single number', function () {
+        expect(pathExtractor.resolve('1', {user:{name:'Hello'}})).to.eql(undefined);
+    });
+
+    it('it resolve space string on space string', function () {
+        expect(pathExtractor.resolve(' ', {user:{name:'Hello'}})).to.eql('');
+    });
+
+    it('it resolve undefined on empty brackets', function () {
+        expect(pathExtractor.resolve('{}', {user:{name:'Hello'}})).to.eql(undefined);
+    });
+
     it('it resolve single nested property', function () {
         expect(pathExtractor.resolve('user.name', {user:{name:'Hello'}})).to.eql('Hello');
     });

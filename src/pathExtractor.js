@@ -6,7 +6,7 @@ const pathExtractor = {
         const that = this;
         const splittedAndFiltered = notation.split(/[\.\[\]]/g).filter(x => x);
         let previousPath = null;
-        return splittedAndFiltered.reduce(function (lastObj, currentProp, currentIndex, arr) {
+        const result = splittedAndFiltered.reduce(function (lastObj, currentProp, currentIndex, arr) {
             try {
                 if (Array.isArray(lastObj)) {
                     if (!Number.isNaN(Number(currentProp))) {
@@ -65,6 +65,8 @@ const pathExtractor = {
                 return undefined;
             }
         }, obj);
+
+        return result;
     },
     hasProperty(obj) {
         if (!obj)
@@ -76,6 +78,12 @@ const pathExtractor = {
         return hasProperty;
     },
     resolve(expression, dataContext) {
+        if (expression)
+            expression = expression.trim();
+
+        if (expression===''){
+            return '';
+        }
         let res = this.fetchDot(expression, dataContext);
         return res;
     },

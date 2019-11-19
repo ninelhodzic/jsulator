@@ -28,6 +28,14 @@ describe("simpleJsulator", function () {
         expect(jsulator.evaluate('2+2')).to.eql(4);
     });
 
+    it('returns null', function () {
+        expect(jsulator.evaluate('')).to.eql(null);
+    });
+
+    it('returns empty object', function () {
+        expect(jsulator.evaluate('{}')).to.eql({});
+    });
+
     it('returns not true', function () {
         expect(jsulator.evaluate('!true')).to.eql(false);
     });
