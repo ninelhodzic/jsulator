@@ -13,7 +13,7 @@ const parameters = {
             precedence: precedence,
             fn: fn
         };
-        console.log('operator', op);
+       // console.log('operator', op);
         this.operators.push(op);
     },
     addFn(name,minArgumentCount, maxArgumentCount, fn){
