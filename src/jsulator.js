@@ -10,6 +10,7 @@ const jsulator = {
   expressionBrackets: {},
   tokenizer: null,
   mapResolver: null,
+  matcherToken:  /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
   init: function () {
     this.functionBrackets = {'(': {open: '(', close: ')'}, ')': {open: '(', close: ')'}};
     this.expressionBrackets = {'(': {open: '(', close: ')'}, ')': {open: '(', close: ')'}};
@@ -160,6 +161,10 @@ const jsulator = {
   evaluate(expression, context) {
     if (!expression)
       return null;
+
+    if (!this.matcherToken.test(expression)){
+      return expression;
+    }
 
     if (expression.startsWith('{') && expression.endsWith('}')) {
       return this.mapResolver.resolveToMap(expression);

@@ -32,6 +32,14 @@ describe("simpleJsulator", function () {
         expect(jsulator.evaluate('')).to.eql(null);
     });
 
+    it('returns expression', function () {
+        expect(jsulator.evaluate('expression', {})).to.eql('expression');
+    });
+
+    it('returns missing', function () {
+        expect(jsulator.evaluate('$expression$', {})).to.eql(undefined);
+    });
+
     it('returns empty object', function () {
         expect(jsulator.evaluate('{}')).to.eql({});
     });
