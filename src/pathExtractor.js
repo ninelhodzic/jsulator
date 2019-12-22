@@ -8,6 +8,9 @@ const pathExtractor = {
         let previousPath = null;
         const result = splittedAndFiltered.reduce(function (lastObj, currentProp, currentIndex, arr) {
             try {
+                if (null===lastObj || undefined === lastObj){
+                    return lastObj;
+                }
                 if (Array.isArray(lastObj)) {
                     if (!Number.isNaN(Number(currentProp))) {
                         if (remove) {
