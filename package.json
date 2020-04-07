@@ -1,5 +1,5 @@
 {
-  "name": "jsulator.js",
+  "name": "jsulator",
   "version": "0.0.1",
   "description": "Jsulator - javascript implementation of dzupper-expression",
   "main": "src/index.js",
@@ -34,7 +34,6 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.0",
     "xregexp": "^4.2.4",
-    "dot-object": "^1.9.0",
-    "lodash": "^4.17.15"
+    "dot-object": "^1.9.0"
   }
 }
