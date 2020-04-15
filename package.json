@@ -22,18 +22,18 @@
   },
   "homepage": "https://github.com/ninelhodzic/jsulator",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.0",
-    "babel-plugin-component": "^1.1.1",
-    "es6-promise": "^4.2.4",
-    "chai": "^4.1.2",
-    "mocha": "^3.5.3",
-    "webpack": "^3.6.0"
+    "@babel/cli": "^7.7.4",
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/register": "^7.7.4",
+    "es6-promise": "^4.2.8",
+    "chai": "^4.2.0",
+    "mocha": "^7.1.1",
+    "webpack": "^4.42.1"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.0",
-    "xregexp": "^4.2.4",
-    "dot-object": "^1.9.0"
+    "@babel/polyfill": "^7.8.7",
+    "xregexp": "^4.3.0",
+    "dot-object": "^2.1.3"
   }
 }

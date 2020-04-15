@@ -287,7 +287,12 @@ const functions = {
       return evaluationContext;
     }
   },
-  COPY: {},
+  COPY: {
+    minArgumentCount: 1, maxArgumentCount: 1,
+    fn: function (operands, argumentList, evaluationContext) {
+      return cloneDeep(operands[0]);
+    }
+  },
   UNION: {
     minArgumentCount: 1, maxArgumentCount: Number.MAX_SAFE_INTEGER,
     fn: function (operands, argumentList, evaluationContext) {
@@ -310,6 +315,46 @@ const functions = {
       });
       return target;
 
+    }
+  },
+  REMAP: {
+    minArgumentCount: 2, maxArgumentCount: 2,
+    fn: function (operands, argumentList, evaluationContext) {
+      let source = operands[0];
+      if (source === null || source === undefined) {
+        return undefined;
+      }
+      source = cloneDeep(source);
+      let schema = cloneDeep(operands[1]);
+
+      if (typeof (schema) === 'string') {
+        schema = mapResolve.resolveToMap(schema);
+      }
+
+      if (typeof (source) === 'string') {
+        if (source.startsWith('[')) {
+          source = mapResolve.resolveToArray(source);
+        } else {
+          source = mapResolve.resolveToMap(source);
+        }
+      }
+      if (Array.isArray(source)) {
+        const newList = [];
+        source.forEach((item, index)=>{
+          const newObj = {};
+          Object.keys(item).map((key,index)=>{
+            newObj[schema[key]]=item[key];
+          });
+          newList.push(newObj);
+        });
+        return newList;
+      } else {
+        const newObj = {};
+        Object.keys(source).map((key,index)=>{
+          newObj[schema[key]]=source[key];
+        });
+        return newObj
+      }
     }
   },
   KEYS: {
