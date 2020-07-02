@@ -2,7 +2,7 @@ const operators = {
     NEGATE:{
         symbol: '!', operandCount: 1, associativity: 'RIGHT', precedence: 1,
         fn: function(operands, evaluationContext){
-            if (operands && operands[0]){
+            if (operands && (operands[0]!==undefined || operands[0]!==null)){
                 return !operands[0];
             }
             return false;

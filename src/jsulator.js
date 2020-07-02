@@ -135,7 +135,7 @@ const jsulator = {
   },
   _getArguments(values, argCount) {
     if (values.length < argCount) {
-      throw new Error("There is values size: " + values.size() + " less then required: " + argCount);
+      throw new Error("There is values size: " + values.length + " less then required: " + argCount);
     }
     //console.log('values', values);
     const res = [];
