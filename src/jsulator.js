@@ -117,7 +117,13 @@ const jsulator = {
       if (!res) {
         res = token.content;
       }
-      res = this.mapResolver.resolve(res, context);//this.mapResolver.resolve(res, context);
+      if (res.toLowerCase()==='true'){
+        res = true;
+      }else if (res.toLowerCase()==='false'){
+        res = false;
+      }else {
+        res = this.mapResolver.resolve(res, context);//this.mapResolver.resolve(res, context);
+      }
       values.splice(0, 0, res);
 
     } else if (token.kind === 'LITERAL_VALUE') {
@@ -282,7 +288,6 @@ const jsulator = {
     while (stack.length > 0) {
       console.log('stack in while', stack);
       let tmpToken = stack.splice(0, 1)[0];
-   //   console.log('sliced token', tmpToken);
       if (tmpToken.kind === 'OPEN_BRACKET' || tmpToken.kind === 'CLOSE_BRACKET') {
         throw new Error("Parentheses mismatched");
       }
@@ -290,7 +295,6 @@ const jsulator = {
       this._output(values, tmpToken, context);
     }
     if (values.length != 1) {
-   //   console.log('values and size', values);
       throw new Error("Values size is not 1");
     } else {
       return values.splice(0, 1)[0];

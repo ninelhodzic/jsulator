@@ -127,4 +127,11 @@ describe("simpleJsulator", function () {
         .to.eql([{name: '1', value:'1'},{name: '2', value:'2'}])
     });
 
+    it('Format date', function(){
+      const now = new Date();
+      expect(
+        jsulator.evaluate("TO_STRING(TO_DATE('2020-09-03'), 'yyyy-MM-dd')")
+      ).to.eql('2020-09-03')
+    });
+
 });

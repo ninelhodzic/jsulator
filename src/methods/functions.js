@@ -1,5 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import mapResolve from '../mapResolver'
+import {DateTime} from "luxon";
 
 const functions = {
   IS_NULL: {
@@ -104,12 +105,15 @@ const functions = {
     }
   },
   TO_STRING: {
-    minArgumentCount: 1, maxArgumentCount: 1,
+    minArgumentCount: 1, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
-      if (typeof(operands[0])==='object'){
+      if (typeof operands[0].getMonth === 'function') {
+        return DateTime.fromJSDate(operands[0]).toFormat(operands[1]);
+      }  else if (typeof (operands[0]) === 'object') {
         return JSON.stringify(operands[0], null, 2);
+      } else {
+        return operands[0].toString();
       }
-      return operands[0].toString();
     }
   },
   TO_BOOLEAN: {
@@ -141,7 +145,7 @@ const functions = {
       return operands[0].toUpperCase();
     }
   },
-  TO_JSON:{
+  TO_JSON: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
       return JSON.parse(operands);
@@ -269,7 +273,6 @@ const functions = {
       //     console.log('called field', operands, argumentList, evaluationContext);
       const tmpObj = {};
       tmpObj[operands[0]] = operands[1];
-      //   console.log('res field', tmpObj);
       return tmpObj;
     }
   },
@@ -340,18 +343,18 @@ const functions = {
       }
       if (Array.isArray(source)) {
         const newList = [];
-        source.forEach((item, index)=>{
+        source.forEach((item, index) => {
           const newObj = {};
-          Object.keys(item).map((key,index)=>{
-            newObj[schema[key]]=item[key];
+          Object.keys(item).map((key, index) => {
+            newObj[schema[key]] = item[key];
           });
           newList.push(newObj);
         });
         return newList;
       } else {
         const newObj = {};
-        Object.keys(source).map((key,index)=>{
-          newObj[schema[key]]=source[key];
+        Object.keys(source).map((key, index) => {
+          newObj[schema[key]] = source[key];
         });
         return newObj
       }
