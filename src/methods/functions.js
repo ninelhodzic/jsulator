@@ -36,7 +36,7 @@ const functions = {
   IF: {
     minArgumentCount: 3, maxArgumentCount: 3,
     fn: function (operands, argumentList, evaluationContext) {
-      console.log('IF', operands, argumentList)
+     // console.log('IF', operands, argumentList)
       if (operands[0]) {
         return operands[1];
       } else {
@@ -190,7 +190,7 @@ const functions = {
   CONTAINS: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
-      console.log('CONTAINS', operands, argumentList)
+     // console.log('CONTAINS', operands, argumentList)
       return operands[0].indexOf(operands[1]) > -1 ? true : false;
     }
   },
@@ -221,7 +221,7 @@ const functions = {
   INDEX_OF: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
-      console.log('INDEX_OF', operands, argumentList)
+      //console.log('INDEX_OF', operands, argumentList)
       const target = operands[0];
       const indexOf = operands[1];
       return target.indexOf(indexOf);
@@ -256,7 +256,7 @@ const functions = {
       const tmpObj = {};
       //  console.log('MAP operands', operands, argumentList, evaluationContext);
       operands.forEach(function (item) {
-        console.log('typeof' + typeof (item));
+     //   console.log('typeof' + typeof (item));
 
         if (typeof (item) === 'object') {
           for (let prop in item) {

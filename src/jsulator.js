@@ -286,7 +286,7 @@ const jsulator = {
     }
 
     while (stack.length > 0) {
-      console.log('stack in while', stack);
+    //  console.log('stack in while', stack);
       let tmpToken = stack.splice(0, 1)[0];
       if (tmpToken.kind === 'OPEN_BRACKET' || tmpToken.kind === 'CLOSE_BRACKET') {
         throw new Error("Parentheses mismatched");
