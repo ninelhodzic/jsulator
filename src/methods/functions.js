@@ -2,6 +2,24 @@ import cloneDeep from 'lodash/cloneDeep'
 import mapResolve from '../mapResolver'
 import {DateTime} from "luxon";
 
+const replaceCircular = function (val, cache) { // TODO - review this in case of VUE object
+  cache = cache || new WeakSet();
+  if (val && typeof (val) === 'object') {
+    if (cache.has(val)) return '[Circular]';
+    if (val && (val.$vnode || val._isVue || val.__file)){
+      return '[Vue Instance]';
+    }
+    cache.add(val);
+    const obj = (Array.isArray(val) ? [] : {});
+    for (var idx in val) {
+      obj[idx] = replaceCircular(val[idx], cache);
+    }
+    cache.delete(val);
+    return obj;
+  }
+  return val;
+};
+
 const functions = {
   IS_NULL: {
     minArgumentCount: 1, maxArgumentCount: 1,
@@ -36,7 +54,7 @@ const functions = {
   IF: {
     minArgumentCount: 3, maxArgumentCount: 3,
     fn: function (operands, argumentList, evaluationContext) {
-     // console.log('IF', operands, argumentList)
+      // console.log('IF', operands, argumentList)
       if (operands[0]) {
         return operands[1];
       } else {
@@ -109,8 +127,8 @@ const functions = {
     fn: function (operands, argumentList, evaluationContext) {
       if (typeof operands[0].getMonth === 'function') {
         return DateTime.fromJSDate(operands[0]).toFormat(operands[1]);
-      }  else if (typeof (operands[0]) === 'object') {
-        return JSON.stringify(operands[0], null, 2);
+      } else if (typeof (operands[0]) === 'object') {
+        return JSON.stringify(replaceCircular(operands[0]), null, 2);
       } else {
         return operands[0].toString();
       }
@@ -190,7 +208,7 @@ const functions = {
   CONTAINS: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
-     // console.log('CONTAINS', operands, argumentList)
+      // console.log('CONTAINS', operands, argumentList)
       return operands[0].indexOf(operands[1]) > -1 ? true : false;
     }
   },
@@ -256,7 +274,7 @@ const functions = {
       const tmpObj = {};
       //  console.log('MAP operands', operands, argumentList, evaluationContext);
       operands.forEach(function (item) {
-     //   console.log('typeof' + typeof (item));
+        //   console.log('typeof' + typeof (item));
 
         if (typeof (item) === 'object') {
           for (let prop in item) {
