@@ -228,12 +228,14 @@ const functions = {
     fn: function (operands, argumentList, evaluationContext) {
       const target = operands[0];
       let start = 0;
-      let end = target.length - 1;
+      let end = target.length - 1;//operands[1]; //
       if (operands.length === 3) {
         start = operands[1];
         end = operands[2];
       }
-      return target.substring(start, end);
+      //const res =
+      //console.log('substring', res, start, end);
+      return target.substring(start, end); //res;
     }
   },
   INDEX_OF: {

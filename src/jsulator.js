@@ -10,7 +10,7 @@ const jsulator = {
   expressionBrackets: {},
   tokenizer: null,
   mapResolver: null,
-  matcherToken:  /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
+  matcherToken: /[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
   init: function () {
     this.functionBrackets = {'(': {open: '(', close: ')'}, ')': {open: '(', close: ')'}};
     this.expressionBrackets = {'(': {open: '(', close: ')'}, ')': {open: '(', close: ')'}};
@@ -25,7 +25,7 @@ const jsulator = {
 
     const tokenDelimitersBuilder = ['(', ')'];
     const that = this;
-   // console.log('parameters', parameters);
+    // console.log('parameters', parameters);
 
     parameters.forEach(function (param) {
       const symbol = param.symbol;
@@ -112,16 +112,16 @@ const jsulator = {
       }
       values.splice(0, 0, res);
     } else */
-    if (token.kind === 'LOOKUP_LITERAL' || token.kind==='LITERAL') {
+    if (token.kind === 'LOOKUP_LITERAL' || token.kind === 'LITERAL') {
       let res = this.constants[token.content];
       if (!res) {
         res = token.content;
       }
-      if (res.toLowerCase()==='true'){
+      if (res.toLowerCase() === 'true') {
         res = true;
-      }else if (res.toLowerCase()==='false'){
+      } else if (res.toLowerCase() === 'false') {
         res = false;
-      }else {
+      } else {
         res = this.mapResolver.resolve(res, context);//this.mapResolver.resolve(res, context);
       }
       values.splice(0, 0, res);
@@ -160,7 +160,7 @@ const jsulator = {
     const argsTokens = this._getArguments(argumentTokens, argCount);
 
     const res = token.content.fn.call(this, args, argsTokens, context);
-  //  console.log('function result', res);
+    //  console.log('function result', res);
     values.splice(0, 0, res);
     // return tmp;
   },
@@ -168,7 +168,7 @@ const jsulator = {
     if (!expression)
       return null;
 
-    if (!this.matcherToken.test(expression)){
+    if (!this.matcherToken.test(expression)) {
       return expression;
     }
 
@@ -189,13 +189,13 @@ const jsulator = {
     const previousValuesSize = [];//this.functions.length===0? [] : null;
 
     const tokens = this.tokenize(expression);
-  //  console.log('tokenizer tokenized', tokens);
+    //  console.log('tokenizer tokenized', tokens);
     let token, previousToken;
     for (let i = 0; i < tokens.length; i++) {
       let currentToken = tokens[i];
       previousToken = token;
       token = this._toToken(previousToken, currentToken);
-   //   console.log('Created new token', token);
+      //   console.log('Created new token', token);
       if (token.kind === 'OPEN_BRACKET') {
         stack.splice(0, 0, token);
         if (previousToken && previousToken.kind === 'FUNCTION') {
@@ -286,7 +286,7 @@ const jsulator = {
     }
 
     while (stack.length > 0) {
-    //  console.log('stack in while', stack);
+      //  console.log('stack in while', stack);
       let tmpToken = stack.splice(0, 1)[0];
       if (tmpToken.kind === 'OPEN_BRACKET' || tmpToken.kind === 'CLOSE_BRACKET') {
         throw new Error("Parentheses mismatched");
