@@ -6,7 +6,7 @@ const replaceCircular = function (val, cache) { // TODO - review this in case of
   cache = cache || new WeakSet();
   if (val && typeof (val) === 'object') {
     if (cache.has(val)) return '[Circular]';
-    if (val && (val.$vnode || val._isVue || val.__file)){
+    if (val && (val.$vnode || val._isVue || val.__file)) {
       return '[Vue Instance]';
     }
     cache.add(val);
@@ -169,10 +169,27 @@ const functions = {
       return JSON.parse(operands);
     }
   },
-  ABS: {
-    minArgumentCount: 1, maxArgumentCount: 1,
+  MATH: {
+    minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
-      return Math.abs(operands[0]);
+      const fnName = operands[0];
+      const fnArg = operands[1];
+
+      const val = Math[fnName](fnArg);
+      return val;
+    }
+  },
+  ROUND: {
+    minArgumentCount: 2, maxArgumentCount: 2,
+    fn: function (operands, argumentList, evaluationContext) {
+      const num = operands[0];
+      const precision = operands[1] || 0;
+
+      let prec = parseInt(1+''+(precision>0?'0'.repeat(precision):''));
+
+      let res = Math.round( ( num + Number.EPSILON ) * prec ) / prec
+
+      return res;
     }
   },
   REGEX_MATCH: {
@@ -450,6 +467,108 @@ const functions = {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
       return operands[0].slice(0, operands[1]);
+    }
+  },
+  SUM: {
+    minArgumentCount: 1, maxArgumentCount: Number.MAX_SAFE_INTEGER,
+    fn: function (operands, argumentList, evaluationContext) {
+      let sum = 0;
+      operands.forEach(function (operand) {
+        /*const token = argumentList.splice(-1, 1);
+        const key = token.content;
+        res[key] = item;*/
+        if (Array.isArray(operand)) {
+          sum += operand.reduce((a, b) => a + b, 0);
+        } else if (typeof operand === 'number' && isFinite(operand)) {
+          sum += operand;
+        } else {
+          sum += Number(operand);
+        }
+      });
+      return sum;
+    }
+  },
+  MIN: {
+    minArgumentCount: 1, maxArgumentCount: Number.MAX_SAFE_INTEGER,
+    fn: function (operands, argumentList, evaluationContext) {
+      let min = undefined;
+      operands.forEach(function (operand) {
+        if (Array.isArray(operand)) {
+          let tmpA = Math.min(...operand);
+          if (min === undefined) {
+            min = tmpA;
+          } else if (tmpA < min) {
+            min = tmpA;
+          }
+        } else if (typeof operand === 'number' && isFinite(operand)) {
+          if (min === undefined) {
+            min = operand;
+          } else if (operand < min) {
+            min = operand
+          }
+        } else {
+          let tmp = Number(operand);
+          if (min === undefined) {
+            min = tmp;
+          } else if (tmp < min) {
+            min = tmp
+          }
+        }
+      });
+      return min;
+    }
+  },
+  MAX: {
+    minArgumentCount: 1, maxArgumentCount: Number.MAX_SAFE_INTEGER,
+    fn: function (operands, argumentList, evaluationContext) {
+      let max = undefined;
+      operands.forEach(function (operand) {
+        if (Array.isArray(operand)) {
+          let tmpA = Math.max(...operand);
+          if (max === undefined) {
+            max = tmpA;
+          } else if (tmpA > max) {
+            max = tmpA;
+          }
+        } else if (typeof operand === 'number' && isFinite(operand)) {
+          if (max === undefined) {
+            max = operand;
+          } else if (operand > max) {
+            max = operand
+          }
+        } else {
+          let tmp = Number(operand);
+          if (max === undefined) {
+            max = tmp;
+          } else if (tmp > max) {
+            max = tmp
+          }
+        }
+      });
+      return max;
+    }
+  },
+  AVG: {
+    minArgumentCount: 1, maxArgumentCount: Number.MAX_SAFE_INTEGER,
+    fn: function (operands, argumentList, evaluationContext) {
+      let sum = 0;
+      let count = 0;
+      operands.forEach(function (operand) {
+        /*const token = argumentList.splice(-1, 1);
+        const key = token.content;
+        res[key] = item;*/
+        if (Array.isArray(operand)) {
+          count+=operand.length;
+          sum += operand.reduce((a, b) => a + b, 0);
+        } else if (typeof operand === 'number' && isFinite(operand)) {
+          ++count;
+          sum += operand;
+        } else {
+          ++count;
+          sum += Number(operand);
+        }
+      });
+      return sum/count;
     }
   }
 }
