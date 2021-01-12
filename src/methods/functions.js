@@ -20,6 +20,10 @@ const replaceCircular = function (val, cache) { // TODO - review this in case of
   return val;
 };
 
+const isNotDefined = function(val){
+  return val===null || val === undefined;
+}
+
 const functions = {
   IS_NULL: {
     minArgumentCount: 1, maxArgumentCount: 1,
@@ -36,6 +40,9 @@ const functions = {
   SIZE_OF: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return operands[0].length;
     }
   },
@@ -71,30 +78,45 @@ const functions = {
   MINUTE: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return operands[0].getMinutes();
     }
   },
   HOUR: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return operands[0].getHours();
     }
   },
   DAY: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return operands[0].getDay();
     }
   },
   MONTH: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return operands[0].getMonth();
     }
   },
   YEAR: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return operands[0].getFullYear();
     }
   },
@@ -107,24 +129,36 @@ const functions = {
   TO_DATE: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return new Date(operands[0]);
     }
   },
   TO_INT: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return parseInt(operands[0])
     }
   },
   TO_DOUBLE: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return parseFloat(operands[0])
     }
   },
   TO_STRING: {
     minArgumentCount: 1, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       if (typeof operands[0].getMonth === 'function') {
         return DateTime.fromJSDate(operands[0]).toFormat(operands[1]);
       } else if (typeof (operands[0]) === 'object') {
@@ -137,6 +171,10 @@ const functions = {
   TO_BOOLEAN: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
+
       let val = operands[0];
       //console.log('typeof val=>'+ typeof(val));
       if (typeof (val) === 'string') {
@@ -154,18 +192,27 @@ const functions = {
   TO_LOWERCASE: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return operands[0].toLowerCase();
     }
   },
   TO_UPPERCASE: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return operands[0].toUpperCase();
     }
   },
   TO_JSON: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       return JSON.parse(operands);
     }
   },
@@ -182,6 +229,9 @@ const functions = {
   ROUND: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       const num = operands[0];
       const precision = operands[1] || 0;
 
@@ -195,6 +245,9 @@ const functions = {
   REGEX_MATCH: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       const string = operands[0], regex = operands[1];
       return string.match(regex);
     }
@@ -202,6 +255,9 @@ const functions = {
   REGEX_EXTRACT: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       const string = operands[0], regex = operands[1];
       return string.exec(regex);
     }
@@ -209,6 +265,9 @@ const functions = {
   REGEX_REPLACE: {
     minArgumentCount: 3, maxArgumentCount: 3,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       const string = operands[0], regex = operands[1], replacement = operands[2];
       return string.replace(regex, replacement);
     }
@@ -217,6 +276,9 @@ const functions = {
   REPLACE_ALL: {
     minArgumentCount: 3, maxArgumentCount: 3,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       const string = operands[0], regex = operands[1], replacement = operands[2];
       return string.split(regex).join(replacement);
     }
@@ -232,6 +294,9 @@ const functions = {
   SPLITTER: {
     minArgumentCount: 1, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       const target = operands[0];
       let splitter = ',';
       if (operands.length > 1) {
@@ -243,6 +308,9 @@ const functions = {
   SUBSTRING: {
     minArgumentCount: 2, maxArgumentCount: 3,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return null;
+      }
       const target = operands[0];
       let start = 0;
       let end = target.length - 1;//operands[1]; //
@@ -258,6 +326,7 @@ const functions = {
   INDEX_OF: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
+
       //console.log('INDEX_OF', operands, argumentList)
       const target = operands[0];
       const indexOf = operands[1];
