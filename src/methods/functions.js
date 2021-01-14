@@ -1,6 +1,8 @@
 import cloneDeep from 'lodash/cloneDeep'
 import mapResolve from '../mapResolver'
 import {DateTime} from "luxon";
+import jsonAggregate  from 'json-aggregate'
+import jsnotevil from '../jsnotevil'
 
 const replaceCircular = function (val, cache) { // TODO - review this in case of VUE object
   cache = cache || new WeakSet();
@@ -638,6 +640,40 @@ const functions = {
         }
       });
       return sum/count;
+    }
+  },
+  AGGREGATE:{
+    minArgumentCount: 2, maxArgumentCount: 2,
+    fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])){
+        return operands[1];
+      }
+      if (isNotDefined(operands[1])){
+        return null;
+      }
+
+      let aggregationExpression = operands[0];
+      if (!Array.isArray(aggregationExpression)){
+        aggregationExpression = [aggregationExpression];
+      }
+      const data = operands[1];
+      if (!Array.isArray(data)){
+        return data;
+      }
+
+      const jsonArray = JSON.stringify(data);
+
+      const collection = jsonAggregate.create(jsonArray);
+      const contextSafe = {collection:collection};
+
+      aggregationExpression.forEach((expression)=>{
+        const cleanAggregationExpression = expression.substring(1, expression.length-1)
+        jsnotevil.safeEval(cleanAggregationExpression, contextSafe);
+      });
+
+      const res = collection.exec();
+      return res;
+
     }
   }
 }

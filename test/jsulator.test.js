@@ -201,4 +201,5 @@ describe("simpleJsulator", function () {
       jsulator.evaluate("MAX(THIS())", [1, 2, 3])
     ).to.eql(3)
   });
+
 });

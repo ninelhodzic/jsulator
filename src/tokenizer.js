@@ -5,7 +5,7 @@ const tokenizer = {
     regeXp: null,
     toRegex: function (delimiters) {
         this.pattern = '(';
-        this.pattern += "'#.?#'|'.*?'|";
+        this.pattern += "'#.*?#'|'.*?'|";
         if (delimiters && delimiters.length) {
             const that = this;
             delimiters.forEach(function (delim) {

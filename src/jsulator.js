@@ -189,7 +189,7 @@ const jsulator = {
     const previousValuesSize = [];//this.functions.length===0? [] : null;
 
     const tokens = this.tokenize(expression);
-    //  console.log('tokenizer tokenized', tokens);
+   // console.log('tokenizer tokenized', tokens);
     let token, previousToken;
     for (let i = 0; i < tokens.length; i++) {
       let currentToken = tokens[i];
