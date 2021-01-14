@@ -1,11 +1,9 @@
 var parse = require('esprima').parse
-import { parseScript } from 'meriyah'
+//import { parseScript } from 'meriyah'
 var hoist = require('hoister')
 
 import InfiniteChecker from './lib/infinite-checker'
 import Primitives from './lib/primitives'
-
-
 
 var maxIterations = 1000000
 
@@ -17,10 +15,10 @@ function safeEval(src, parentContext){
 }
 
 function parseCode(code, options){
- // const esprimaParse = parse(code, options);
-  const parsedCode = parseScript(code, options);
+  const esprimaParse = parse(code, options);
+  //const parsedCode = parseScript(code, options);
 
-  return parsedCode;
+  return esprimaParse;
 }
 
 // create a 'Function' constructor for a controlled environment

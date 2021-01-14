@@ -38,7 +38,6 @@
     "luxon": "^1.24.1",
     "json-aggregate": "^0.1.2",
     "esprima": "^4.0.1",
-    "hoister": "^0.0.2",
-    "meriyah": "^3.1.6"
+    "hoister": "^0.0.2"
   }
 }
