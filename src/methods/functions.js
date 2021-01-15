@@ -1,8 +1,9 @@
 import cloneDeep from 'lodash/cloneDeep'
 import mapResolve from '../mapResolver'
 import {DateTime} from "luxon";
-import jsonAggregate  from 'json-aggregate'
+import jsonAggregate from 'json-aggregate'
 import jsnotevil from '../jsnotevil'
+import simpleJsulator from '../index'
 
 const replaceCircular = function (val, cache) { // TODO - review this in case of VUE object
   cache = cache || new WeakSet();
@@ -22,8 +23,8 @@ const replaceCircular = function (val, cache) { // TODO - review this in case of
   return val;
 };
 
-const isNotDefined = function(val){
-  return val===null || val === undefined;
+const isNotDefined = function (val) {
+  return val === null || val === undefined;
 }
 
 const functions = {
@@ -42,7 +43,7 @@ const functions = {
   SIZE_OF: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return operands[0].length;
@@ -80,7 +81,7 @@ const functions = {
   MINUTE: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return operands[0].getMinutes();
@@ -89,7 +90,7 @@ const functions = {
   HOUR: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return operands[0].getHours();
@@ -98,7 +99,7 @@ const functions = {
   DAY: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return operands[0].getDay();
@@ -107,7 +108,7 @@ const functions = {
   MONTH: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return operands[0].getMonth();
@@ -116,7 +117,7 @@ const functions = {
   YEAR: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return operands[0].getFullYear();
@@ -131,7 +132,7 @@ const functions = {
   TO_DATE: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return new Date(operands[0]);
@@ -140,7 +141,7 @@ const functions = {
   TO_INT: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return parseInt(operands[0])
@@ -149,7 +150,7 @@ const functions = {
   TO_DOUBLE: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return parseFloat(operands[0])
@@ -158,7 +159,7 @@ const functions = {
   TO_STRING: {
     minArgumentCount: 1, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       if (typeof operands[0].getMonth === 'function') {
@@ -173,7 +174,7 @@ const functions = {
   TO_BOOLEAN: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
 
@@ -194,7 +195,7 @@ const functions = {
   TO_LOWERCASE: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return operands[0].toLowerCase();
@@ -203,7 +204,7 @@ const functions = {
   TO_UPPERCASE: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return operands[0].toUpperCase();
@@ -212,7 +213,7 @@ const functions = {
   TO_JSON: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       return JSON.parse(operands);
@@ -231,15 +232,15 @@ const functions = {
   ROUND: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       const num = operands[0];
       const precision = operands[1] || 0;
 
-      let prec = parseInt(1+''+(precision>0?'0'.repeat(precision):''));
+      let prec = parseInt(1 + '' + (precision > 0 ? '0'.repeat(precision) : ''));
 
-      let res = Math.round( ( num + Number.EPSILON ) * prec ) / prec
+      let res = Math.round((num + Number.EPSILON) * prec) / prec
 
       return res;
     }
@@ -247,7 +248,7 @@ const functions = {
   REGEX_MATCH: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       const string = operands[0], regex = operands[1];
@@ -257,7 +258,7 @@ const functions = {
   REGEX_EXTRACT: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       const string = operands[0], regex = operands[1];
@@ -267,7 +268,7 @@ const functions = {
   REGEX_REPLACE: {
     minArgumentCount: 3, maxArgumentCount: 3,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       const string = operands[0], regex = operands[1], replacement = operands[2];
@@ -278,7 +279,7 @@ const functions = {
   REPLACE_ALL: {
     minArgumentCount: 3, maxArgumentCount: 3,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       const string = operands[0], regex = operands[1], replacement = operands[2];
@@ -296,7 +297,7 @@ const functions = {
   SPLITTER: {
     minArgumentCount: 1, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       const target = operands[0];
@@ -310,7 +311,7 @@ const functions = {
   SUBSTRING: {
     minArgumentCount: 2, maxArgumentCount: 3,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return null;
       }
       const target = operands[0];
@@ -629,7 +630,7 @@ const functions = {
         const key = token.content;
         res[key] = item;*/
         if (Array.isArray(operand)) {
-          count+=operand.length;
+          count += operand.length;
           sum += operand.reduce((a, b) => a + b, 0);
         } else if (typeof operand === 'number' && isFinite(operand)) {
           ++count;
@@ -639,41 +640,66 @@ const functions = {
           sum += Number(operand);
         }
       });
-      return sum/count;
+      return sum / count;
     }
   },
-  AGGREGATE:{
+  AGGREGATE: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
-      if (isNotDefined(operands[0])){
+      if (isNotDefined(operands[0])) {
         return operands[1];
       }
-      if (isNotDefined(operands[1])){
+      if (isNotDefined(operands[1])) {
         return null;
       }
 
       let aggregationExpression = operands[0];
-      if (!Array.isArray(aggregationExpression)){
+      if (!Array.isArray(aggregationExpression)) {
         aggregationExpression = [aggregationExpression];
       }
       const data = operands[1];
-      if (!Array.isArray(data)){
+      if (!Array.isArray(data)) {
         return data;
       }
 
       const jsonArray = JSON.stringify(data);
 
       const collection = jsonAggregate.create(jsonArray);
-      const contextSafe = {collection:collection};
+      const contextSafe = {collection: collection};
 
-      aggregationExpression.forEach((expression)=>{
-        const cleanAggregationExpression = expression.substring(1, expression.length-1)
+      aggregationExpression.forEach((expression) => {
+        const cleanAggregationExpression = expression.substring(1, expression.length - 1)
         jsnotevil.safeEval(cleanAggregationExpression, contextSafe);
       });
 
       const res = collection.exec();
       return res;
 
+    }
+  },
+  EVALUATE: {
+    minArgumentCount: 2, maxArgumentCount: 2,
+    fn: function (operands, argumentList, evaluationContext) {
+      const expression = operands[0];
+      const data = operands[1];
+
+      if (isNotDefined(operands[0])) {
+        return operands[1];
+      }
+      if (isNotDefined(operands[1])) {
+        return null;
+      }
+      let cleanExpression = expression;
+      if (expression.indexOf('#') === 0) {
+        cleanExpression = expression.substring(1, expression.length - 1);
+      }
+      let cleanData = data;
+      if (data.indexOf('#') === 0) {
+        cleanData = data.substring(1, data.length - 1);
+      }
+      const jsonData = JSON.parse(cleanData);
+      const res = simpleJsulator.evaluate(cleanExpression, jsonData);
+      return res;
     }
   }
 }

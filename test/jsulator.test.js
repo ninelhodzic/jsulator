@@ -202,4 +202,11 @@ describe("simpleJsulator", function () {
     ).to.eql(3)
   });
 
+  it('evaluate string', function () {
+    const expr = "EVALUATE('#FIELD('name',$some$)#','#{\"some\":\"name1\"}#')";
+    expect(
+      jsulator.evaluate(expr, [1, 2, 3])
+    ).to.eql({name: 'name1'})
+  });
+
 });
