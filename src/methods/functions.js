@@ -344,7 +344,6 @@ const functions = {
 
     }
   },
-
   SELECT: {
     minArgumentCount: 1, maxArgumentCount: Number.MAX_SAFE_INTEGER,
     fn: function (operands, argumentList, evaluationContext) {
@@ -362,7 +361,23 @@ const functions = {
     fn: function (operands, argumentList, evaluationContext) {
       let res = [];
       operands.forEach(function (item) {
-        res = res.concat(item);
+        if (Array.isArray(item)) {
+          res = res.concat(item);
+        }else if (typeof item === 'string'){
+          let strItem = item;
+          if (item.indexOf('#')===0){
+            strItem = item.substring(1, item.length-1);
+          }
+          let tmpArr;
+          try{
+            tmpArr = JSON.parse(strItem);
+          }catch (e){
+            console.log('provided str is wrong format: '+strItem, e);
+          }
+          if (tmpArr){
+            res = res.concat(tmpArr);
+          }
+        }
       });
       return res;
     }
@@ -378,6 +393,22 @@ const functions = {
         if (typeof (item) === 'object') {
           for (let prop in item) {
             tmpObj[prop] = item[prop];
+          }
+        }else if (typeof item ==='string'){
+          let strObj = item;
+          if (item.indexOf('#')===0){
+            strObj = item.substring(1, item.length-1);
+          }
+          let obj;
+          try{
+            obj = JSON.parse(strObj);
+          }catch (e){
+            console.log('provided str is wrong format: '+strObj, e);
+          }
+          if (obj) {
+            for (let prop in obj) {
+              tmpObj[prop] = obj[prop];
+            }
           }
         }
       });
