@@ -4,6 +4,9 @@ import {DateTime} from "luxon";
 import jsonAggregate from 'json-aggregate'
 import jsnotevil from '../jsnotevil'
 import simpleJsulator from '../index'
+import {MAX_SAFE_INTEGER} from "echarts/lib/util/number";
+import filter from 'lodash/filter'
+import findIndex from 'lodash/findIndex'
 
 const replaceCircular = function (val, cache) { // TODO - review this in case of VUE object
   cache = cache || new WeakSet();
@@ -333,7 +336,12 @@ const functions = {
       //console.log('INDEX_OF', operands, argumentList)
       const target = operands[0];
       const indexOf = operands[1];
-      return target.indexOf(indexOf);
+      if (typeof indexOf === 'object') {
+        return findIndex(target, indexOf);
+      } else {
+        return target.indexOf(indexOf);
+      }
+
     }
   },
 
@@ -472,6 +480,8 @@ const functions = {
   KEYS: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0]))
+        return operands[0];
       const target = operands[0];
       const res = [];
       for (const prop in target) {
@@ -483,6 +493,9 @@ const functions = {
   VALUES: {
     minArgumentCount: 1, maxArgumentCount: 1,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0]))
+        return operands[0];
+
       const target = operands[0];
       const res = [];
       for (const prop in target) {
@@ -491,9 +504,26 @@ const functions = {
       return res;
     }
   },
+  INCLUDE_FILTER: {
+    minArgumentCount: 2, maxArgumentCount: 2,
+    fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0]))
+        return operands[0];
+
+      const obj = operands[0];
+      const filterObj = operands[1];
+
+      if (Array.isArray(obj)) {
+        return filter(obj, filterObj);
+      }
+    }
+  },
   EXCLUDE_FIELDS: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0]))
+        return operands[0];
+
       const target = operands[0];
       const listOfPros = operands[1];
       listOfPros.forEach(function (prop) {
@@ -504,12 +534,18 @@ const functions = {
   GET: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0]))
+        return operands[0];
+
       return operands[0][operands[1]];
     }
   },
   ADD: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0]))
+        return operands[0];
+
       const target = cloneDeep(operands[0]);
       const item = cloneDeep(operands[1]);
       target.push(item);
@@ -520,6 +556,10 @@ const functions = {
     minArgumentCount: 3, maxArgumentCount: 3,
     fn: function (operands, argumentList, evaluationContext) {
       const target = cloneDeep(operands[0]);
+      if (isNotDefined(target)) {
+        return target;
+      }
+
       const index = cloneDeep(operands[1]);
       const item = cloneDeep(operands[2]);
       target.splice(index, 1, item);
@@ -643,6 +683,35 @@ const functions = {
       return sum / count;
     }
   },
+  STEP: {
+    minArgumentCount: 1, maxArgumentCount: Number.MAX_SAFE_INTEGER,
+    fn: function (operands, argumentList, evaluationContext) {
+      if (operands) {
+        if (isNotDefined(operands[0]))
+          return operands[0];
+
+        let source = operands[0];
+        operands.splice(0, 1);
+
+        let stepResult = source;
+        operands.forEach((operand) => {
+
+          if (operand.indexOf('#') === 0) {
+            let cleanOperand = operand.substring(1, operand.length - 1);
+            let context = {
+              _current: stepResult,
+              _parent: evaluationContext
+            }
+            console.log('execution step', operand, cleanOperand, context)
+
+            let tmpRes = simpleJsulator.evaluate(cleanOperand, context);
+            stepResult = tmpRes;
+          }
+        });
+        return stepResult;
+      }
+    }
+  },
   AGGREGATE: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
@@ -668,13 +737,54 @@ const functions = {
       const contextSafe = {collection: collection};
 
       aggregationExpression.forEach((expression) => {
-        const cleanAggregationExpression = expression.substring(1, expression.length - 1)
-        jsnotevil.safeEval(cleanAggregationExpression, contextSafe);
+        let cleanAggregationExpression = expression;
+        if (typeof expression === 'string') {
+          if (expression.indexOf('#') === 0)
+            cleanAggregationExpression = expression.substring(1, expression.length - 1);
+          jsnotevil.safeEval(cleanAggregationExpression, contextSafe);
+        } else {
+          let expObj = '';
+          throw Error('Aggregation has to have string items');
+        }
       });
 
       const res = collection.exec();
       return res;
 
+    }
+  },
+  FUNC: {
+    minArgumentCount: 1, maxArgumentCount: 3,
+    fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])) {
+        return null;
+      }
+      let context = operands[1];
+      if (context === undefined) {
+        context = evaluationContext;
+      }
+
+
+      const expression = operands[0];
+      let cleanExpression = expression;
+      if (expression.indexOf('#') === 0) {
+        cleanExpression = expression.substring(1, expression.length - 1);
+      }
+      let cleanContext = context;
+      if (typeof context === String) {
+        if (context.indexOf('#') === 0) {
+          cleanContext = context.substring(1, context.length - 1);
+        }
+      }
+
+      const saveContext = {context: cleanContext};
+      saveContext.context.console = console;
+
+      const fn = jsnotevil.Function('context', cleanExpression);
+      const res2 = fn(cleanContext);
+
+      console.log('res2', res2);
+      return res2;
     }
   },
   EVALUATE: {
