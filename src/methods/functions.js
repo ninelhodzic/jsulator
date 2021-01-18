@@ -165,7 +165,7 @@ const functions = {
       if (isNotDefined(operands[0])) {
         return null;
       }
-      if (typeof operands[0].getMonth === 'function') {
+      if (operands[0].getMonth && typeof operands[0].getMonth === 'function') {
         return DateTime.fromJSDate(operands[0]).toFormat(operands[1]);
       } else if (typeof (operands[0]) === 'object') {
         return JSON.stringify(replaceCircular(operands[0]), null, 2);
@@ -219,7 +219,14 @@ const functions = {
       if (isNotDefined(operands[0])) {
         return null;
       }
-      return JSON.parse(operands);
+      let str = operands[0];
+      if (typeof str ==='string'){
+        if (str.indexOf('#')===0){
+          str = str.substring(1, str.length-1);
+        }
+        return JSON.parse(str);
+      }
+      return operands[0];
     }
   },
   MATH: {
