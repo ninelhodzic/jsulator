@@ -826,26 +826,28 @@ const functions = {
     }
   },
   EVALUATE: {
-    minArgumentCount: 2, maxArgumentCount: 2,
+    minArgumentCount: 1, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
       const expression = operands[0];
-      const data = operands[1];
+      let data = operands[1];
 
-      if (isNotDefined(operands[0])) {
-        return operands[1];
+      if (isNotDefined(operands[0]) || operands[0]==='') {
+        return data;
       }
-      if (isNotDefined(operands[1])) {
-        return null;
-      }
+
       let cleanExpression = expression;
       if (expression.indexOf('#') === 0) {
         cleanExpression = expression.substring(1, expression.length - 1);
       }
       let cleanData = data;
-      if (data.indexOf('#') === 0) {
-        cleanData = data.substring(1, data.length - 1);
+      let jsonData = evaluationContext;
+      if (data && typeof data === 'string') {
+        if(data.indexOf('#') === 0){
+          cleanData = data.substring(1, data.length - 1);
+        }
+        jsonData = JSON.parse(cleanData);
       }
-      const jsonData = JSON.parse(cleanData);
+
       const res = simpleJsulator.evaluate(cleanExpression, jsonData);
       return res;
     }
