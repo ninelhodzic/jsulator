@@ -382,8 +382,14 @@ const functions = {
             console.log('provided str is wrong format: '+strItem, e);
           }
           if (tmpArr){
-            res = res.concat(tmpArr);
+            if (Array.isArray(tmpArr)) {
+              res = res.concat(tmpArr);
+            }else{
+              res.push(tmpArr);
+            }
           }
+        }else{
+          res.push(item);
         }
       });
       return res;
