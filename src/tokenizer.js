@@ -30,6 +30,7 @@ const tokenizer = {
             this.pattern = this.pattern.substring(0, this.pattern.length - 1);
         }
         this.pattern += ")";
+      //  console.log('tokenizer pattern: '+ this.pattern);
         this.regeXp = xregexp(this.pattern, 'gs');
     },
     tokenizer: function (ops) {

@@ -54,6 +54,7 @@ const jsulator = {
       }
     });
 
+  //  console.log('tokenDelimitersBuilder', tokenDelimitersBuilder);
     this.tokenizer = tokenizer.tokenizer(tokenDelimitersBuilder);
 
     return this;
@@ -188,8 +189,9 @@ const jsulator = {
     const stack = [];
     const previousValuesSize = [];//this.functions.length===0? [] : null;
 
-    const tokens = this.tokenize(expression);
-   // console.log('tokenizer tokenized', tokens);
+    const tokens = this.tokenizer.tokenize(expression);// this.tokenize(expression);
+ //   console.log('tokenizer tokenized tokens', tokens, tokenizer);
+
     let token, previousToken;
     for (let i = 0; i < tokens.length; i++) {
       let currentToken = tokens[i];

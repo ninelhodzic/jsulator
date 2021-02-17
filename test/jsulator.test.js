@@ -64,6 +64,20 @@ describe("simpleJsulator", function () {
     expect(jsulator.evaluate("$a$>$b$", {a: 30, b: 20})).to.eql(true);
   });
 
+  it('returns not equal from context', function () {
+    expect(jsulator.evaluate("$a$!=$b$", {a: 30, b: 20})).to.eql(true);
+  });
+  /*
+  TODO - this doesn't work - expression tokenizer issue
+  it('returns not equal from context', function () {
+    expect(jsulator.evaluate("!$a$==!$b$", {a: 30, b: 20})).to.eql(true);
+  });
+   */
+
+  it('returns  equal from context', function () {
+    expect(jsulator.evaluate("$a$==$b$", {a: 30, b: 30})).to.eql(true);
+  });
+
   it('returns FIELD from context', function () {
     expect(jsulator.evaluate("FIELD('key', 34+1)")).to.eql({key: 35});
   });
