@@ -478,7 +478,6 @@ const functions = {
         }
       });
       return target;
-
     }
   },
   REMAP: {
@@ -746,7 +745,7 @@ const functions = {
               _current: stepResult,
               _parent: evaluationContext
             }
-            console.log('execution step', operand, cleanOperand, context)
+         //   console.log('execution step', operand, cleanOperand, context)
 
             let tmpRes = simpleJsulator.evaluate(cleanOperand, context);
             stepResult = tmpRes;

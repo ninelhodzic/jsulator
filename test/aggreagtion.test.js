@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-//import simpleJsulator, {tokenizer} from '../src'
 import simpleJsulator from "../src/simpleJsulator";
 
 
@@ -42,13 +41,6 @@ describe("aggregation", function () {
 
   it('aggregates unwind', function () {
     const expression = "AGGREGATE('#collection.unwind('sizes')#', THIS())";
-    expect(
-      jsulator.evaluate(expression, data)
-    ).to.not.eql(null);
-  });
-
-  it('aggregates match and unwind list', function () {
-    const expression = "AGGREGATE(LIST('#collection.match({'shop': 'MNO'})#','#collection.unwind('sizes')#'), THIS())";
     expect(
       jsulator.evaluate(expression, data)
     ).to.not.eql(null);
