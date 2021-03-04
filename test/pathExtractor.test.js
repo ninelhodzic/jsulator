@@ -45,6 +45,10 @@ describe("pathExtractor", function () {
     expect(pathExtractor.resolve('arr[0]', {arr: [1, 2, 3]})).to.eql(1);
   });
 
+  it('it resolve single array property with brackets as array', function () {
+    expect(pathExtractor.resolve('arr[].name', {arr: [{name: 'name1'}, {name: 'name2'}]})).to.eql(['name1', 'name2']);
+  });
+
   it('it resolve single array property with brackets', function () {
     expect(pathExtractor.resolve('arr[].child[].name', {arr: [{child: [{name: 'name1'}, {name: 'name2'}]}, {child: [{name: 'name2_1'}]}]})).to.eql([['name1', 'name2'], ['name2_1']]);
   });

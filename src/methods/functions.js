@@ -4,9 +4,9 @@ import {DateTime} from "luxon";
 import jsonAggregate from 'json-aggregate'
 import jsnotevil from '../jsnotevil'
 import simpleJsulator from '../index'
-import {MAX_SAFE_INTEGER} from "echarts/lib/util/number";
 import filter from 'lodash/filter'
 import findIndex from 'lodash/findIndex'
+import helperFunctions from "./helpers/helperFunctions";
 
 const replaceCircular = function (val, cache) { // TODO - review this in case of VUE object
   cache = cache || new WeakSet();
@@ -220,9 +220,9 @@ const functions = {
         return null;
       }
       let str = operands[0];
-      if (typeof str ==='string'){
-        if (str.indexOf('#')===0){
-          str = str.substring(1, str.length-1);
+      if (typeof str === 'string') {
+        if (str.indexOf('#') === 0) {
+          str = str.substring(1, str.length - 1);
         }
         return JSON.parse(str);
       }
@@ -370,25 +370,25 @@ const functions = {
       operands.forEach(function (item) {
         if (Array.isArray(item)) {
           res = res.concat(item);
-        }else if (typeof item === 'string'){
+        } else if (typeof item === 'string') {
           let strItem = item;
-          if (item.indexOf('#')===0){
-            strItem = item.substring(1, item.length-1);
+          if (item.indexOf('#') === 0) {
+            strItem = item.substring(1, item.length - 1);
           }
           let tmpArr;
-          try{
+          try {
             tmpArr = JSON.parse(strItem);
-          }catch (e){
-            console.log('provided str is wrong format: '+strItem, e);
+          } catch (e) {
+            console.log('provided str is wrong format: ' + strItem, e);
           }
-          if (tmpArr){
+          if (tmpArr) {
             if (Array.isArray(tmpArr)) {
               res = res.concat(tmpArr);
-            }else{
+            } else {
               res.push(tmpArr);
             }
           }
-        }else{
+        } else {
           res.push(item);
         }
       });
@@ -407,16 +407,16 @@ const functions = {
           for (let prop in item) {
             tmpObj[prop] = item[prop];
           }
-        }else if (typeof item ==='string'){
+        } else if (typeof item === 'string') {
           let strObj = item;
-          if (item.indexOf('#')===0){
-            strObj = item.substring(1, item.length-1);
+          if (item.indexOf('#') === 0) {
+            strObj = item.substring(1, item.length - 1);
           }
           let obj;
-          try{
+          try {
             obj = JSON.parse(strObj);
-          }catch (e){
-            console.log('provided str is wrong format: '+strObj, e);
+          } catch (e) {
+            console.log('provided str is wrong format: ' + strObj, e);
           }
           if (obj) {
             for (let prop in obj) {
@@ -480,6 +480,60 @@ const functions = {
       return target;
     }
   },
+  LIST_PARTITION: {
+    minArgumentCount: 1, maxArgumentCount: 2,
+    fn: function (operands, argumentList, evaluationContext) {
+      const target = [];
+      const source = operands[0];
+      if (!source) {
+        return source;
+      }
+      const num = operands.length === 2 ? operands[1] : 2
+
+      let i, j;
+      for (i = 0, j = source.length; i < j; i += num) {
+        const temparray = source.slice(i, i + num);
+        target.push(temparray);
+      }
+      return target;
+    }
+  },
+  LIST_UNPARTITION: {
+    minArgumentCount: 1, maxArgumentCount: 1,
+    fn: function (operands, argumentList, evaluationContext) {
+      if (!operands || !operands.length) {
+        return null;
+      }
+      const lists = operands[0];
+      if (lists && lists.length) {
+        const newList = [].concat(...lists);
+        return newList;
+      }
+      return lists;
+    }
+  },
+  MERGE: {
+    minArgumentCount: 1, maxArgumentCount: Number.MAX_SAFE_INTEGER,
+    fn: function (operands, argumentList, evaluationContext) {
+      let mergeType = 'BY_KEY_LIST';
+      if (!operands[0])
+        return operands[0];
+
+      const sources = [];
+      if (operands[0] instanceof String) {
+        mergeType = operands[0];
+      } else {
+        sources.push(operands[0]);
+      }
+      const restOperands = operands.slice(1);
+      if (restOperands.length)
+        sources.splice(sources.length, 0, ...restOperands);
+
+      console.log('sources', sources);
+      const result = helperFunctions.MERGE(sources);
+      return  result;
+    }
+  },
   REMAP: {
     minArgumentCount: 2, maxArgumentCount: 2,
     fn: function (operands, argumentList, evaluationContext) {
@@ -501,23 +555,13 @@ const functions = {
           source = mapResolve.resolveToMap(source);
         }
       }
-      if (Array.isArray(source)) {
-        const newList = [];
-        source.forEach((item, index) => {
-          const newObj = {};
-          Object.keys(item).map((key, index) => {
-            newObj[schema[key]] = item[key];
-          });
-          newList.push(newObj);
-        });
-        return newList;
-      } else {
-        const newObj = {};
-        Object.keys(source).map((key, index) => {
-          newObj[schema[key]] = source[key];
-        });
-        return newObj
+      if (!source) {
+        return operands[0];
       }
+
+      const result = helperFunctions.REMAP(source, schema);
+      return result;
+
     }
   },
   KEYS: {
@@ -745,7 +789,7 @@ const functions = {
               _current: stepResult,
               _parent: evaluationContext
             }
-         //   console.log('execution step', operand, cleanOperand, context)
+            //   console.log('execution step', operand, cleanOperand, context)
 
             let tmpRes = simpleJsulator.evaluate(cleanOperand, context);
             stepResult = tmpRes;
@@ -807,7 +851,6 @@ const functions = {
         context = evaluationContext;
       }
 
-
       const expression = operands[0];
       let cleanExpression = expression;
       if (expression.indexOf('#') === 0) {
@@ -836,7 +879,7 @@ const functions = {
       const expression = operands[0];
       let data = operands[1];
 
-      if (isNotDefined(operands[0]) || operands[0]==='') {
+      if (isNotDefined(operands[0]) || operands[0] === '') {
         return data;
       }
 
@@ -847,7 +890,7 @@ const functions = {
       let cleanData = data;
       let jsonData = evaluationContext;
       if (data && typeof data === 'string') {
-        if(data.indexOf('#') === 0){
+        if (data.indexOf('#') === 0) {
           cleanData = data.substring(1, data.length - 1);
         }
         jsonData = JSON.parse(cleanData);

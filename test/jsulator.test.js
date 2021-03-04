@@ -149,12 +149,12 @@ describe("simpleJsulator", function () {
   });
 
   it('REMAP map to map', function () {
-    expect(jsulator.evaluate("REMAP($map$, '{\"n\":\"name\",\"v\":\"value\"}')", {map: {n: '1', v: '1'}}))
+    expect(jsulator.evaluate("REMAP($map$, '{\"name\":\"$n$\",\"value\":\"$v$\"}')", {map: {n: '1', v: '1'}}))
       .to.eql({name: '1', value: '1'})
   });
 
   it('REMAP list to list', function () {
-    expect(jsulator.evaluate("REMAP($list$, '{\"n\":\"name\",\"v\":\"value\"}')", {
+    expect(jsulator.evaluate("REMAP($list$, '{\"name\":\"$n$\",\"value\":\"$v$\"}')", {
       list: [{n: '1', v: '1'}, {
         n: '2',
         v: '2'
