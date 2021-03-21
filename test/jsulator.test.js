@@ -29,7 +29,11 @@ describe("simpleJsulator", function () {
   });
 
   it('returns null', function () {
-    expect(jsulator.evaluate('')).to.eql(null);
+    expect(jsulator.evaluate('')).to.eql('');
+  });
+
+  it('returns hello', function () {
+    expect(jsulator.evaluate('\'hello\'')).to.eql('\'hello\'');
   });
 
   it('returns expression', function () {
