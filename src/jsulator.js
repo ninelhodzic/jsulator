@@ -14,6 +14,7 @@ const jsulator = {
   init: function () {
     this.functionBrackets = {'(': {open: '(', close: ')'}, ')': {open: '(', close: ')'}};
     this.expressionBrackets = {'(': {open: '(', close: ')'}, ')': {open: '(', close: ')'}};
+    this.tokenDelimitersBuilder = ['(', ')'];
   },
   jsulator: function (parameters, mapResolver) {
     this.mapResolver = mapResolver;
@@ -23,15 +24,31 @@ const jsulator = {
     this.operators = {};
     this.constants = {};
 
-    const tokenDelimitersBuilder = ['(', ')'];
     const that = this;
     // console.log('parameters', parameters);
 
+    this._loadParameters(parameters);
+
+  //  console.log('tokenDelimitersBuilder', tokenDelimitersBuilder);
+    this.tokenizer = tokenizer.tokenizer(this.tokenDelimitersBuilder);
+
+    return this;
+  },
+  appendParameters(parameters){
+    if (parameters){
+      this._loadParameters(parameters);
+    }
+  },
+  tokenize(expression) {
+    return tokenizer.tokenize(expression);
+  },
+  _loadParameters(parameters){
+    const that = this;
     parameters.forEach(function (param) {
       const symbol = param.symbol;
       switch (param.type) {
         case 'OP':
-          tokenDelimitersBuilder.push(symbol);
+          that.tokenDelimitersBuilder.push(symbol);
           let tmpList = that.operators[symbol];
           if (!tmpList) {
             tmpList = [];
@@ -45,7 +62,7 @@ const jsulator = {
         case 'FN':
           that.functions[param.name] = param;
           if (param.maxArgumentCount > 1) {
-            tokenDelimitersBuilder.push(that.functionArgumentSeparator);
+            that.tokenDelimitersBuilder.push(that.functionArgumentSeparator);
           }
           break;
         case 'CS':
@@ -53,14 +70,6 @@ const jsulator = {
           break;
       }
     });
-
-  //  console.log('tokenDelimitersBuilder', tokenDelimitersBuilder);
-    this.tokenizer = tokenizer.tokenizer(tokenDelimitersBuilder);
-
-    return this;
-  },
-  tokenize(expression) {
-    return tokenizer.tokenize(expression);
   },
   _guessOperator: function (previousToken, candidates) {
     const argCount = previousToken === null || previousToken.kind !== 'CLOSE_BRACKET' && (previousToken.kind !== 'LITERAL' || previousToken === 'LITERAL_VALUE') ? 1 : 2;
