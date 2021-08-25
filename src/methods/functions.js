@@ -315,7 +315,7 @@ const functions = {
       if (operands.length > 1) {
         splitter = operands[1];
       }
-      return target.splice(splitter);
+      return target.split(splitter);
     }
   },
   SUBSTRING: {
