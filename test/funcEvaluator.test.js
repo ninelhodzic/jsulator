@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import simpleJsulator from "../src/simpleJsulator";
 
 
-describe("aggregation", function () {
+describe("function", function () {
   let jsulator;
   before(function () {
     jsulator = simpleJsulator.simpleJsulator();

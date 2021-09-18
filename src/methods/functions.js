@@ -318,6 +318,20 @@ const functions = {
       return target.split(splitter);
     }
   },
+  JOIN: {
+    minArgumentCount: 1, maxArgumentCount: 2,
+    fn: function (operands, argumentList, evaluationContext) {
+      if (isNotDefined(operands[0])) {
+        return null;
+      }
+      const target = operands[0];
+      let joiner = ',';
+      if (operands.length > 1) {
+        joiner = operands[1];
+      }
+      return target.join(joiner);
+    }
+  },
   SUBSTRING: {
     minArgumentCount: 2, maxArgumentCount: 3,
     fn: function (operands, argumentList, evaluationContext) {
@@ -838,6 +852,25 @@ const functions = {
       const res = collection.exec();
       return res;
 
+    }
+  },
+  GROUP_BY: {
+    minArgumentCount: 1, maxArgumentCount: 2,
+    fn: function (operands, argumentList, evaluationContext) {
+      console.log('GROUP_BY', operands);
+      if (isNotDefined(operands[0])) {
+        return null;
+      }
+      let context = evaluationContext;
+      if (operands.length>1){
+        context = operands[1];
+      }
+
+
+      const result = helperFunctions.GROUP_BY(context, operands[0]);
+      console.log('result group by', result, operands);
+
+      return result;
     }
   },
   FUNC: {

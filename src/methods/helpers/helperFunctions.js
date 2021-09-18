@@ -60,6 +60,12 @@ const helperFunctions = {
     }
     return indexedValues;
   },
+  GROUP_BY(xs, key) {
+    return xs.reduce(function (rv, x) {
+      (rv[x[key]] = rv[x[key]] || []).push(x);
+      return rv;
+    }, {});
+  },
   REMAP(source, schema) {
     if (Array.isArray(source)) {
       const newList = [];
@@ -81,10 +87,10 @@ const helperFunctions = {
           if (typeof expression === 'string') {
             const res = simpleJsulator.evaluate(expression, source);
             newObj[key] = res;
-          }else if (Array.isArray(expression)){
+          } else if (Array.isArray(expression)) {
             console.warn('Expression value is an array', expression, key);
             newObj[key] = res;
-          }else if (typeof expression ==='object'){
+          } else if (typeof expression === 'object') {
             newObj = {...newObj, ...expression}
           }
         }
