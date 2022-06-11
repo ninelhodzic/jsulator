@@ -526,6 +526,15 @@ const functions = {
       return lists;
     }
   },
+  FLATTEN: {
+    minArgumentCount: 1, maxArgumentCount: 1,
+    fn: function (operands, argumentList, evaluationContext) {
+      const sources = operands[0];
+      console.log('sources', sources);
+      const result = helperFunctions.FLATTEN(sources);
+      return result;// && result.length ? result[0] : result;
+    }
+  },
   MERGE: {
     minArgumentCount: 1, maxArgumentCount: Number.MAX_SAFE_INTEGER,
     fn: function (operands, argumentList, evaluationContext) {
@@ -545,7 +554,7 @@ const functions = {
 
       console.log('sources', sources);
       const result = helperFunctions.MERGE(sources);
-      return  result;
+      return result;
     }
   },
   REMAP: {
@@ -784,6 +793,26 @@ const functions = {
       return sum / count;
     }
   },
+  FOREACH: {
+    minArgumentCount: 2, maxArgumentCount: 4,
+    fn: function (operands, argumentList, evaluationContext) {
+      if (operands) {
+        const source = operands[0]
+        const expressionToExecute = operands[1];
+        let parentObject = evaluationContext;
+        if (operands.length > 2) {
+          parentObject = operands[2];
+        }
+        let filterOutExpression = null;
+        if (operands.length > 3) {
+          filterOutExpression = operands[3];
+        }
+
+        const result = helperFunctions.FOREACH(source, expressionToExecute, parentObject, filterOutExpression);
+        return result;
+      }
+    }
+  },
   STEP: {
     minArgumentCount: 1, maxArgumentCount: Number.MAX_SAFE_INTEGER,
     fn: function (operands, argumentList, evaluationContext) {
@@ -862,7 +891,7 @@ const functions = {
         return null;
       }
       let context = evaluationContext;
-      if (operands.length>1){
+      if (operands.length > 1) {
         context = operands[1];
       }
 

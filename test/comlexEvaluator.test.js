@@ -9,6 +9,20 @@ describe("function", function () {
     jsulator = simpleJsulator.simpleJsulator();
   });
 
+  it('evaluate flatten', function () {
+    const expr = "FLATTEN(THIS())";
+    expect(
+      jsulator.evaluate(expr, { id:'123', child:[{ name: 'NN', age: 10}, {name: 'BB', age: 11 }] })
+    ).to.eql([{id: '123', child_name: 'NN', child_age: 10}, { id: '123', child_name: 'BB', child_age: 11}]);
+  });
+
+  it('evaluate forEach', function () {
+    const expr = "FOREACH($child$, '# $_current$ #')";
+    expect(
+      jsulator.evaluate(expr, { id:'123', child:[{ name: 'NN', age: 10}, {name: 'BB', age: 11 }] })
+    ).to.eql([{ name: 'NN', age: 10}, {name: 'BB', age: 11 }]);
+  });
+
   it('evaluate simple function string', function () {
     const expr = "FUNC('# return context.list #')";
     expect(
