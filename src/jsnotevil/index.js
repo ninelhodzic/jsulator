@@ -2,8 +2,8 @@ var parse = require('esprima').parse
 //import { parseScript } from 'meriyah'
 var hoist = require('hoister')
 
-import InfiniteChecker from './lib/infinite-checker'
-import Primitives from './lib/primitives'
+import InfiniteChecker from './lib/infinite-checker.js'
+import Primitives from './lib/primitives.js'
 
 var maxIterations = 1000000
 

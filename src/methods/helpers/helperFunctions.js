@@ -1,4 +1,4 @@
-import simpleJsulator from '../../index'
+import simpleJsulator from '../../index.js'
 import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 

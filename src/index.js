@@ -1,6 +1,6 @@
-import simpleJsulator from './simpleJsulator'
-import tokenizer from './tokenizer'
-import mapResolver from './mapResolver'
+import simpleJsulator from './simpleJsulator.js'
+import tokenizer from './tokenizer.js'
+import mapResolver from './mapResolver.js'
 
 export {
     simpleJsulator as default,

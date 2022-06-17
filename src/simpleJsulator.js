@@ -1,8 +1,8 @@
-import Parameters from './parameters'
-import jsulator from './jsulator'
-import mapResolver from './mapResolver'
-import operators from './methods/operators'
-import functions from './methods/functions'
+import Parameters from './parameters.js'
+import jsulator from './jsulator.js'
+import mapResolver from './mapResolver.js'
+import operators from './methods/operators.js'
+import functions from './methods/functions.js'
 
 class Params {
   constructor() {

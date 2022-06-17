@@ -1,5 +1,5 @@
 import DotObject from 'dot-object'
-import pathExtractor from './pathExtractor'
+import pathExtractor from './pathExtractor.js'
 
 const mapResolver = {
     resolveToMap(expression) {

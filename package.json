@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Jsulator - javascript implementation of dzupper-expression",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "build": "webpack",
     "test": "mocha --require @babel/register --require @babel/polyfill ./test/*.test.js"

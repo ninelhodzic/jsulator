@@ -1,5 +1,5 @@
-import tokenizer from './tokenizer'
-import token from './token'
+import tokenizer from './tokenizer.js'
+import token from './token.js'
 
 const jsulator = {
   functions: null,
