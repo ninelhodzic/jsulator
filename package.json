@@ -15,7 +15,6 @@
     "expressions",
     "transformation"
   ],
-  "type": "module",
   "author": "Ninel Hodzic <ninel.hodzic@gmail.com>",
   "license": "MIT",
   "bugs": {
