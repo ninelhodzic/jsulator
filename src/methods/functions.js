@@ -1,4 +1,4 @@
-import { cloneDeep, filter, findIndex } from 'lodash'
+import { cloneDeep, filter, findIndex } from 'lodash-es'
 import mapResolve from '../mapResolver.js'
 import {DateTime} from "luxon";
 import jsonAggregate from 'json-aggregate'
