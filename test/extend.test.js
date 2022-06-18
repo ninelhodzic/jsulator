@@ -1,5 +1,6 @@
-import {expect} from 'chai';
-import simpleJsulator from "../src/simpleJsulator";
+import chai from 'chai';
+const {expect} = chai;
+import simpleJsulator from "../src/simpleJsulator.js";
 
 const functions = {
   TEST: {

@@ -1,6 +1,7 @@
-import {expect} from 'chai';
+import chai from 'chai';
+const {expect} = chai;
 
-import pathExtractor from '../src/pathExtractor'
+import pathExtractor from '../src/pathExtractor.js'
 
 describe("pathExtractor", function () {
 

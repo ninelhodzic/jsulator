@@ -1,6 +1,7 @@
-import {expect} from 'chai';
+import chai from 'chai';
+const {expect} = chai;
 
-import simpleJsulator, {tokenizer} from '../src'
+import  simpleJsulator, {tokenizer} from '../src/index.js'
 
 
 describe("tokenizer", function () {

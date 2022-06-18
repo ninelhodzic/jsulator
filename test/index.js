@@ -1,2 +1,2 @@
-require('./pathExtractor.test')
-require('./jsulator.test');
+require('./pathExtractor.test.js')
+require('./jsulator.test.js');
