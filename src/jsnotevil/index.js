@@ -1,6 +1,8 @@
-var parse = require('esprima').parse
-//import { parseScript } from 'meriyah'
-var hoist = require('hoister')
+/*var parse = require('esprima').parse
+var hoist = require('hoister')*/
+
+import { parse } from 'esprima';
+import hoist from 'hoister';
 
 import InfiniteChecker from './lib/infinite-checker.js'
 import Primitives from './lib/primitives.js'

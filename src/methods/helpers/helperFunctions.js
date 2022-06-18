@@ -1,6 +1,5 @@
 import simpleJsulator from '../../index.js'
-import cloneDeep from 'lodash/cloneDeep'
-import merge from 'lodash/merge'
+import { cloneDeep, merge } from 'lodash'
 
 const helperFunctions = {
   _FOREACH_list(source, expressionToExecute, parentObject, filterOutExpression) {

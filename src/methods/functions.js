@@ -1,11 +1,9 @@
-import cloneDeep from 'lodash/cloneDeep'
+import { cloneDeep, filter, findIndex } from 'lodash'
 import mapResolve from '../mapResolver.js'
 import {DateTime} from "luxon";
 import jsonAggregate from 'json-aggregate'
 import jsnotevil from '../jsnotevil/index.js'
 import simpleJsulator from '../index.js'
-import filter from 'lodash/filter'
-import findIndex from 'lodash/findIndex'
 import helperFunctions from "./helpers/helperFunctions.js";
 
 const replaceCircular = function (val, cache) { // TODO - review this in case of VUE object
