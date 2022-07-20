@@ -1,0 +1,28 @@
+{
+  "example1": [
+    {
+      "value": "5",
+      "type": "LITERAL"
+    },
+    {
+      "value": "+",
+      "type": "OPERATOR"
+    },
+    {
+      "value": "$asd$",
+      "type": "LOOKUP_LITERAL"
+    },
+    {
+      "value": "*",
+      "type": "OPERATOR"
+    },
+    {
+      "value": "(",
+      "type": "OPEN_BRACKET"
+    },
+    {
+      "value": "MIN",
+      "type": "FUNCTION"
+    }
+  ]
+}

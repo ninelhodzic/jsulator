@@ -29,20 +29,27 @@ const jsulator = {
 
     this._loadParameters(parameters);
 
-  //  console.log('tokenDelimitersBuilder', tokenDelimitersBuilder);
+    //  console.log('tokenDelimitersBuilder', tokenDelimitersBuilder);
     this.tokenizer = tokenizer.tokenizer(this.tokenDelimitersBuilder);
 
     return this;
   },
-  appendParameters(parameters){
-    if (parameters){
+  appendParameters(parameters) {
+    if (parameters) {
       this._loadParameters(parameters);
     }
   },
   tokenize(expression) {
     return tokenizer.tokenize(expression);
   },
-  _loadParameters(parameters){
+  getMetadata(){
+    return {
+      operators: this.operators,
+      functions: this.functions,
+      constants: this.constants
+    }
+  },
+  _loadParameters(parameters) {
     const that = this;
     parameters.forEach(function (param) {
       const symbol = param.symbol;
@@ -175,11 +182,11 @@ const jsulator = {
     // return tmp;
   },
   evaluate(expression, context) {
-    if (null===expression || expression===undefined)
+    if (null === expression || expression === undefined)
       return null;
 
     let expr = expression;
-    if (expr.indexOf('#') === 0) {
+    if (expr.startsWith('#') && expr.endsWith('#')) {
       expr = expr.substring(1, expr.length - 1);
     }
 
@@ -204,7 +211,7 @@ const jsulator = {
     const previousValuesSize = [];//this.functions.length===0? [] : null;
 
     const tokens = this.tokenizer.tokenize(expr);// this.tokenize(expression);
- //   console.log('tokenizer tokenized tokens', tokens, tokenizer);
+    //   console.log('tokenizer tokenized tokens', tokens, tokenizer);
 
     let token, previousToken;
     for (let i = 0; i < tokens.length; i++) {
@@ -216,10 +223,10 @@ const jsulator = {
         stack.splice(0, 0, token);
         if (previousToken && previousToken.kind === 'FUNCTION') {
           if (!this.functionBrackets['(']) {
-            throw new Error("Invalid bracket after function: " + currentToken +' expr: '+expr);
+            throw new Error("Invalid bracket after function: " + currentToken + ' expr: ' + expr);
           }
         } else if (!this.expressionBrackets['(']) {
-          throw new Error("Invalid bracket in expression: " + currentToken +' expr: '+expr);
+          throw new Error("Invalid bracket in expression: " + currentToken + ' expr: ' + expr);
         }
 
       } else if (token.kind === 'CLOSE_BRACKET') {
@@ -227,7 +234,7 @@ const jsulator = {
           throw new Error('Expression cannot start with a close bracket');
         }
         if (previousToken.kind == 'FUNCTION_SEPARATOR') {
-          throw new Error('argument missing expr: '+expr);
+          throw new Error('argument missing expr: ' + expr);
         }
 
         const brackets = token.content;
@@ -255,10 +262,10 @@ const jsulator = {
 
       } else if (token.kind === 'FUNCTION_SEPARATOR') {
         if (!previousToken) {
-          throw new Error("expression can't start with a function argument separator expr: "+expr)
+          throw new Error("expression can't start with a function argument separator expr: " + expr)
         }
         if (previousToken.kind === 'OPEN_BRACKET' || previousToken.kind === 'FUNCTION_SEPARATOR') {
-          throw new Error("argument is missing expr: "+expr);
+          throw new Error("argument is missing expr: " + expr);
         }
 
         let sc3 = false;
@@ -277,11 +284,11 @@ const jsulator = {
         }
 
       } else if (token.kind === 'FUNCTION') {
-        stack.splice(0, 0, token);//stack.push(token);
+        stack.splice(0, 0, token);
         previousValuesSize.splice(0, 0, values.length);
       } else if (token.kind !== 'OPERATOR') {
         if (previousToken && previousToken.kind === 'LITERAL') {
-          throw new Error("A literal can\'t follow another literal expr: "+expr);
+          throw new Error("A literal can\'t follow another literal expr: " + expr);
         }
         argumentTokens.splice(0, 0, token);
         this._output(values, token, context);
@@ -305,13 +312,13 @@ const jsulator = {
       //  console.log('stack in while', stack);
       let tmpToken = stack.splice(0, 1)[0];
       if (tmpToken.kind === 'OPEN_BRACKET' || tmpToken.kind === 'CLOSE_BRACKET') {
-        throw new Error("Parentheses mismatched expr: "+expr);
+        throw new Error("Parentheses mismatched expr: " + expr);
       }
       argumentTokens.splice(0, 0, tmpToken);
       this._output(values, tmpToken, context);
     }
     if (values.length != 1) {
-      throw new Error("Values size is not 1 expr: "+expr);
+      throw new Error("Values size is not 1 expr: " + expr);
     } else {
       return values.splice(0, 1)[0];
     }
